@@ -21,13 +21,15 @@ public class AboutBox extends JDialog {
 
     private AnimatedComponent renderer;
     private String userInfo;
+    private int type;
     
     
     
     
-    protected AboutBox( Frame owner, String title, String userInfo ) {
+    protected AboutBox( Frame owner, String title, int type ) {
         super( owner, title );
-        this.userInfo = userInfo;
+        this.userInfo = "Double click the upper component to start anim";
+        this.type = type;
         setDefaultCloseOperation( WindowConstants.HIDE_ON_CLOSE );
 
         buildGui();
@@ -40,8 +42,7 @@ public class AboutBox extends JDialog {
     
     private void buildGui() {
 
-        int modulo = (int) ( Math.random() * 3 );
-        switch ( modulo ) {
+        switch ( this.type ) {
             case 0:
                 renderer = new FacedSphere();
                 setResizable( true );
