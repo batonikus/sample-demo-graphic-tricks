@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="Windows-1250"?>
+<project basedir="." default="makeJar" name="SDGT build">
+
+	<property file="build.properties"/>
+
+	<!-- main directories -->
+	<property name="build.dir" location="."/>
+	<property name="build.classes.dir" location="${build.dir}/bin"/>
+	
+	
+	<property name="jws.dir" location="${build.dir}/jws"/>
+	<property name="jws.deploy.dir" location="${build.dir}/jwsDeploy"/>
+	
+	<property name="build.input.dir" location="."/>
+	<property name="build.sources.dir" location="${build.input.dir}/src"/>
+
+	<property name="build.lib" location="${framework.dir}/lib"/>
+
+
+
+	<!--property name="jrem.runnable.class" value="com.emg.jrem.Client"/-->
+	<property name="keystore" value="keystore"/>
+	<property name="keystorePass" value="keystore"/>
+	<property name="signer" value="baton"/>
+	<property name="signerPass" value="batonkeystore"/>
+
+	<property name="jwsJVM" value="1.4"/>
+
+		
+	<property file="${jws.dir}/filter.properties"/>
+
+	
+	
+    <!-- ********************************************** CLASSPATHS-->
+	
+	<path id="compile.classpath">
+	</path>
+	
+
+	<target name="jws" depends="clean,makeJar,_prepareFtp" description="Create from scratch all JAR files needed for Java Web Start and deploy them">
+
+		<copy todir="${jws.deploy.dir}">
+			<fileset dir="${jws.dir}">
+				<include name="*.jar"/>
+				<include name="*.gif"/>
+			</fileset>
+		</copy>
+		
+		<filter filtersfile="${jws.dir}/filter.properties"/>
+		<copy todir="${jws.deploy.dir}" filtering="true">
+			<fileset dir="${jws.dir}">
+				<include name="*.html"/>
+				<include name="*.jnlp"/>
+			</fileset>
+		</copy>
+		
+		<echo message="Sending files to ${jws.deploy.server} directory ${jws.deploy.remoteDir}"/>
+		<!-- ftp copy all the deploy files -->
+		<ftp server="${jws.deploy.server}"
+			remotedir="${jws.deploy.remoteDir}"
+			userid="${jws.deploy.user}"
+			password="${jws.deploy.pass}">
+			
+			<fileset dir="${jws.deploy.dir}"/>
+		</ftp>
+		
+		<move file="${jws.deploy.dir}/${jar.name}.jar" tofile="www/jws/${jar.name}.jar" overwrite="true"/>
+
+		<delete dir="${jws.deploy.dir}" quiet="yes"/>
+	</target>
+
+	
+	<target name="_prepareFtp" description="Prepare remote ftp directory to deploy JWS to">
+		<ftp action="mkdir" 
+			server="${jws.deploy.server}" 
+			remotedir="${jws.deploy.remoteDir}"
+			userid="${jws.deploy.user}"
+			password="${jws.deploy.pass}"
+		/>
+	</target>
+
+	<target name="compile" depends="_prepareBuildDirectories" description="Compile SDGT classes">
+		<javac
+			source="${jwsJVM}"
+			target="${jwsJVM}"
+			destdir="${build.classes.dir}"
+			compiler="modern"
+			classpathref="compile.classpath"
+        	debug="on"
+			>
+			
+			<src path="${build.sources.dir}"/>
+			<classpath path="${framework.dir}/bin"/>
+			<classpath path="${reports.dir}/bin"/>
+		</javac>
+		
+		<filter filtersfile="${jws.dir}/filter.properties"/>
+		<copy todir="${jws.deploy.dir}" filtering="true">
+			<fileset dir="${jws.dir}">
+				<include name="*.html"/>
+				<include name="*.jnlp"/>
+			</fileset>
+		</copy>
+		
+		<!--filter filtersfile="filter.properties"/-->
+		<copy todir="${build.classes.dir}" overwrite="true">
+			<fileset dir="${build.sources.dir}" includes="**/*.properties"/>
+		</copy>
+		<copy todir="${build.classes.dir}" overwrite="true">
+			<fileset dir="${build.sources.dir}" includes="**/*.xml"/>
+			<fileset dir="${build.sources.dir}" includes="**/*.png"/>
+		</copy>
+		
+	</target>
+
+
+	
+	
+	
+	
+	<target name="makeJar" depends="compile" description="Make SDGT JAR">
+		<jar destfile="${jws.deploy.dir}/${jar.name}.jar">
+			<fileset dir="${build.classes.dir}"/>
+			<manifest>
+				<attribute name="Main-Class" value="${application.runnable.class}"/>
+			</manifest>
+		</jar>
+		<signjar jar="${jws.deploy.dir}/${jar.name}.jar" keystore="${build.dir}/${keystore}" 
+			alias="${signer}" keypass="${signerPass}" storepass="${keystorePass}"/>
+	</target>
+
+
+
+	<target name="clean" description="Deletes all compiled code">
+		<delete dir="${build.classes.dir}" quiet="yes"/>
+		<delete dir="${framework.out.dir}" quiet="yes"/>
+		<delete dir="${jws.deploy.dir}" quiet="yes"/>
+	</target>
+
+
+	<target name="_prepareBuildDirectories" description="Create necessary build directories (output)">
+		<mkdir dir="${build.classes.dir}"/>
+		<mkdir dir="${jws.deploy.dir}"/>
+	</target>
+
+
+</project>
