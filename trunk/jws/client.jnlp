@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<jnlp spec="0.2 1.0"
+	codebase="@application.codebase@"
+	href="@application.href@">
+
+	<information>
+		<title>@application.name@</title>
+		<vendor>@application.vendor@</vendor>
+		<homepage href="@application.codebase@"/>
+		<description>@application.description@</description>
+		<description kind="short">@application.description.short@</description>
+		<icon href="@application.codebase@@application.icon@"/>
+		<icon href="@application.codebase@@application.icon@" type="splash"/>
+		<offline-allowed/>
+	</information>
+	<resources>
+		<j2se version="1.4+" href="http://java.sun.com/products/autodl/j2se"/>
+		
+		<jar href="@jar.name@.jar" main="true" download="eager"/>
+		
+		
+	</resources>
+	<security> 
+		<all-permissions/> 
+	</security>
+
+	<application-desc main-class="@application.runnable.class@">
+		<!--argument>-Djava.util.logging.config.file=@application.codebase@logging.properties</argument-->
+	</application-desc>
+</jnlp>  
+
