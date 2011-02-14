@@ -311,7 +311,7 @@ public class Tunnel extends JPanel implements AnimatedComponent {
         int x = - ( LOGO_COLS.length >> 1 ) * _LOGO_SCALE;
         int y = - ( _LOGO_Y_RESOLUTION >> 1 ) * _LOGO_SCALE;
 
-        Set<double[]> allPoints =  new HashSet<double[]>();
+        Set allPoints =  new HashSet();
         for ( int i = 0; i<LOGO_COLS.length; i++ ) {
 
             y = - ( _LOGO_Y_RESOLUTION >> 1 ) * _LOGO_SCALE;
@@ -339,7 +339,7 @@ public class Tunnel extends JPanel implements AnimatedComponent {
         int p = 0;
         _ALL_POINTS = new double[ allPoints.size() ][];
         _ALL_ANIM_POINTS = new double[ allPoints.size() ][];
-        final Iterator<double[]> it = allPoints.iterator();
+        final Iterator it = allPoints.iterator();
         while ( it.hasNext() ) {
             _ALL_POINTS[ p ] = (double[])it.next();
             _ALL_ANIM_POINTS[ p ] = new double[ 3 ];
