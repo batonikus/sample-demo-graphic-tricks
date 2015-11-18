@@ -11,3 +11,9 @@ To run it you must first add an 'security exception' for that URL (application i
 - add/paste the http://baton.pop.e-wro.pl/sample-demo-graphic-tricks/client.jnlp there and add it as exception
 - now you can run it by clicking above JNLP url or by typing into your shell/command window:
     javaws http://baton.pop.e-wro.pl/sample-demo-graphic-tricks/client.jnlp
+
+Screenshots:
+
+http://baton.pop.e-wro.pl/sample-demo-graphic-tricks/screen-shot-3d-bouncing-ball.jpg
+http://baton.pop.e-wro.pl/sample-demo-graphic-tricks/screen-shot-3d-tunnel.jpg
+http://baton.pop.e-wro.pl/sample-demo-graphic-tricks/screen-shot-pipes-floating-text.jpg
